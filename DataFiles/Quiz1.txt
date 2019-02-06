@@ -1,0 +1,130 @@
+
+Name: Shah Shubham
+Last 4 digits ID: 8554
+Computer IP address:10.182.10.117
+CSE 6331, Cloud Computing					
+
+
+Quiz Q1, Spring 2019   (c) DL, UTA, 2019
+
+
+  C&P means cut and paste only those relevant lines from your program(s) into this quiz.
+
+
+ 1.  I understand that I am on my honor during this quiz, I will not collaborate, use 
+     non-allowed sources, and I will not discuss or share this quiz with anyone for the next 
+     4 hours.
+     You MAY: use Google to search, use previous source code, 
+     YOU MAY NOT use:
+     Email, Facebook, Hangouts, IM, chats, Skype or ANY other human connection.
+
+     This is a timed test. Late tests will have points deducted for being late.
+     Very late tests will not be graded.
+
+     When you are complete, with any part, please raise your hand, so we may visually inspect that part.
+
+     The second part of the test, you should electronically submit, you will need to copy and paste 
+     only those lines of code to implement that part of the test, usually a few (two to eight) lines of code. 
+     Place it immediately after the question.
+
+     Submit this Quiz (renamed) with code cut and pasted, ONLY text. DO NOT submit zips, binaries, libraries,
+     or anything other than text.
+
+     When any parts(questions) are complete complete, submit this test, you may make multiple submissions.
+
+     If you have computer, or other, problems, please raise your hand immediately.
+
+     If you understand and agree, please initial here:
+     _________________
+
+ 2. Get files from this same folder.
+   
+ 3. Name your program/submission with your name and last digits of your ID.
+
+ 4. Using the cloud services provider, all functionality possible should be implemented on that provider.
+    (Of course, displaying web pages through a browser and the user interface is "local")
+
+Show and submit code:
+
+ 5. Show a web page and interface (which resides on the cloud provider) with your name and 
+    student ID in large font at the top of every web page dispayed (for this quiz)
+    The cloud service provider is IBM Cloud (BlueMix).
+
+ 6. Upload all data files to cloud service, then, on a web "form" (page), allow us to enter a
+    file name, and you will show it's name and size (on cloud) on your screen.
+    (such as: "minnow" (or "minnow.jpg") and show the file name and size on cloud on a web page)
+
+
+    @app.route('/get_single_member', methods = ['POST'])
+    def get_member():
+        if client:
+            user = request.get_json()
+            name = user['name']
+            to_send_data = []
+            all_user_data = map(lambda doc: doc, db)
+            for x in all_user_data:
+                if name == str(x['Picture']) or str(x['Picture']).startswith(name):
+                    send_dict = {}
+                    img_name = str(x['Picture'])
+                    size = float(x["_attachments"][img_name]["length"])
+                    size_data = str(float(size/1000)) + " kb."
+                    send_dict = {
+                        'name': img_name,
+                        'size': size_data
+                    }
+                    to_send_data.append(send_dict)
+                else:
+                    pass
+            return jsonify({'status': to_send_data}), 200
+        else:
+            return jsonify({'status': 'Not Working'}), 400
+
+
+
+ 7. Allow user to enter (select) a room number and, if possible, show the corresponding picture 
+    (or show "no picture available").
+
+    @app.route('/get_image_data', methods=['POST'])
+    def get_image():
+        print("---- get image data ---")
+        data = request.get_json()
+        room_num = data['room']
+        if client:
+            to_send_list = []
+            all_user_data = map(lambda doc: doc, db)
+            for x in all_user_data:
+                if str(room_num) == str(x['Room']):
+                    if x['Picture'] == "":
+                        val = 'No Image Available'
+                        
+                    else:
+                        val = 'Image Available: {0}'.format(x['Picture'])
+                        
+                    user_data = {
+                        'image': val
+                    }
+                    to_send_list.append(user_data)
+                else:
+                    pass
+            return jsonify({'status': to_send_list}), 200
+
+ 8. Allow a user to give a room range and city name and show names, city name, rooms and photos of all matching.
+    (such as: rooms 400 to 500, "Arlington")
+
+ 9. Allow a user to select either a SuperPower or a single Keyword, then show names, city name, rooms and photos 
+    of all matching, THEN allow a user to select any matching entry (person) and change either the SuperPower or
+    the Keywords.
+    (Only ONE of these is selected: "nice" (or, for example "outa"), for the selection "nice" show the two matching,
+    (there are no pictures), then allow a user to modify the corresponding Keywords.) 
+
+ 10. Allow a user to give a height range and a new container (folder, directory) name, then move (don't copy) 
+     the matching pictures from the original location to the new container (if in a DB, move to a new table in that
+     new location). Then show a web page with the names, pictures, and rooms for each entry in both locations.
+     (such as: height 160 to 170 will move 2 people (out of the 3, one doesn't have a picture) then show)
+ 
+ 11. Show GTA parts 6, 7, 8, 9, 10
+
+ 12. When complete, return (send) this quiz
+     If you finish early, send this immediately, otherwise send between
+     the end of class and no more than 1 minute after that.
+
