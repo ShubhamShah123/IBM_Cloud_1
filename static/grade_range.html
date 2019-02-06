@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>6331 Advanced DB</title>
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.messagestore.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.fallbacks.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.language.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.parser.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.emitter.js"></script>
+    <script src="js/lib/jquery.i18n/jquery.i18n.emitter.bidi.js"></script>
+    <script src="antixss.js" type="text/javascript"></script>
+    <script>
+        $( document ).ready(function() {
+            $.i18n().load( {
+                en: {
+                    "name": "name",
+                    "what_is_your_name": "Enter room range: ",
+                    "name": "Enter the name",
+                    "from": "From",
+                    "to": "To",
+                    "city": "City Name",
+                    // "room": "$1",
+                    // "grade": "$1",
+                    "stud_name": "$1",
+                    // "state": "$1",
+                    // "telnum": "$1",
+                    // "keywords": "$1",
+                    "picture": "$1"
+                }            
+            } );
+            $('body').i18n();
+            $('#from_tb').attr("placeholder", $.i18n('from') );
+            $('#to_tb').attr("placeholder", $.i18n('to') );
+            $('#city_tb').attr("placeholder", $.i18n('city') );
+        });
+    </script>
+    <style type="text/css">
+        th, td {
+            padding: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container" id="container">
+        <div id="nameInput" class="input-group-lg helloInput">
+            <br>
+            <p class="lead" data-i18n="what_is_your_name"></p>
+            <input id="from_tb" type="number" class="form-control" value=""/><br>
+            <input id="to_tb" type="number" class="form-control" value=""/><br>
+            <input id="city_tb" type="text" class="form-control" value=""/>
+
+
+        </div>
+        <br>
+        <input type=button onClick="getGradeRange()" value='Get Data' align="center">
+        <input type=button onClick="alertBox()" value='Back' align="center" id="clicked" disabled="true" name="clicked">
+        <br><br>
+        
+        
+    </div>
+
+    <div class="container" id="container">
+        <table border="1" id="posts">
+            <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Picture</th>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>
+<script>
+
+function getGradeRange() {
+    var from = $('#from_tb').val();
+    var to = $('#to_tb').val();
+    var city = $('#city_tb').val();
+    console.log(from)
+    console.log(to)
+    $.ajax({
+                method: "POST",
+                url: "./get_users_data",
+                contentType: "application/json",
+                data: JSON.stringify({ from: from, to:to, city: city })
+            })
+            .done(function(data) {
+                console.table(data)
+                var t = "";
+                for (var i = 0; i < data['status'].length; i++){
+                      var tr = "<tr>";
+                      tr += "<td>"+(i+1)+"</td>";
+                      tr += "<td>"+data['status'][i]['name']+"</td>";
+                      tr += "<td>"+data['status'][i]['image']+"</td>";
+                      tr += "</tr>";
+                      t += tr;
+                }
+                document.getElementById("posts").innerHTML += t;
+                enableButton();
+            });
+    document.getElementById('from_tb').value = "";
+    document.getElementById('to_tb').value = "";
+}
+
+function enableButton()
+{
+    let valid = $("#clicked").attr("disabled",true);
+    if(valid) {
+        $("#clicked").attr("disabled",false);
+    }   
+}
+
+function alertBox()
+{
+    document.getElementById("posts").innerHTML = '';
+    window.history.back();
+
+}
+</script>
